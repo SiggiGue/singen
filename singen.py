@@ -1,7 +1,7 @@
 """
 This module intends to implement some signal generators for infinetely generating
 audio test signals
-It depents on NumPy and PySoundcard.
+It depends on NumPy and PySoundcard.
 An example is given in the __main__ part.
 By siegfried Gündert
 
@@ -67,7 +67,7 @@ class SineGenerator:
 
     """
 
-    def __init__(self, a0=0.5, f0=1000.0, phi0=0.0, fs=44100, block_len=1024, nchannels=2):
+    def __init__(self, a0=0.1, f0=1000.0, phi0=0.0, fs=44100, block_len=1024, nchannels=2):
         self._a0 = a0
         self._f0 = f0
         self._phi0 = phi0
@@ -182,7 +182,7 @@ def lcm(a, b):
 if __name__=='__main__':
     import time
 
-    a0 = .1
+ a0 = .1
     f0 = 1000.0
     block_len = 512
     fs = 44100
