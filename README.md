@@ -1,4 +1,4 @@
-# Generate Singe Singnals with infinite duration and play them on your sound device
+# Generate Sine Singnals with infinite duration and play them on your sound device
 
 This module intends to implements a sine signal generator for infinetely playing on your audio
 device with the module PySoundcard.
@@ -35,5 +35,22 @@ It depends on NumPy and PySoundcard.
         time.sleep(0.5)
 
     s.stop()
+
+```
+
+*Play with exponentially swept sine:*
+```python
+
+    sl = LogSweep()
+    sl.play()
+
+    time.sleep(2.0)
+
+    sl.fstart = 3000
+    sl.fstop = 500
+
+    time.sleep(2.0)
+
+    sl.stop()
 
 ```
