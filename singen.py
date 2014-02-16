@@ -1,3 +1,12 @@
+"""
+This module intends to implement some signal generators for infinetely generating
+audio test signals
+It depents on NumPy and PySoundcard.
+An example is given in the __main__ part.
+By siegfried Gündert
+
+"""
+
 import numpy as np
 import pysoundcard as psc
 
@@ -53,7 +62,9 @@ class SineGenerator:
 
     s.stop()
 
+
     have fun, siegfried
+
     """
 
     def __init__(self, a0=0.5, f0=1000.0, phi0=0.0, fs=44100, block_len=1024, nchannels=2):
@@ -127,15 +138,18 @@ class SineGenerator:
         return self._period_len*self._ntimes
 
     def _gensin(self):
+        """Returns the basic sine function"""
         n = self._ntimes
         phi =  np.linspace(0, n*2*np.pi, n*self._period_len)[:-1]
         return self.a0 * np.sin(phi + self.phi0)
 
     @property
     def signal(self):
+        """Returns the sine signal"""
         return np.tile(self._gensin(), (2, 1)).T
 
     def read(self):
+        """Returns the next block of samples"""
         self._counter = 1 + self._counter % self._nblocks
         idx = np.mod(np.arange(self.block_len*(self._counter-1),
                                self._counter*self.block_len),
@@ -143,10 +157,11 @@ class SineGenerator:
         return self.signal[idx, :]  # self._signal[idx, :]
 
     def play(self):
-        """plays the signal on the default sound device"""
+        """Plays the signal on the default sound device"""
         self._stream.start()
 
     def stop(self):
+        """Stops playing of deafult sound device"""
         self._stream.stop()
 
 
@@ -157,9 +172,11 @@ def gcd(a, b):
         a, b = b, a%b
     return a
 
+
 def lcm(a, b):
     """Returns the lowest common multiple"""
     return a * b // gcd(a, b)
+
 
 
 if __name__=='__main__':
@@ -171,6 +188,7 @@ if __name__=='__main__':
     fs = 44100
     s = SineGenerator(a0=a0, f0=f0, block_len=block_len, fs=fs)
 
+    # play a chromatic scale by changing the f0 of my SineGenerator Object:
     s.play()
     for k in np.arange(13):
         s.f0 = 2**(k/12.0) * f0
