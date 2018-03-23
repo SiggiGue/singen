@@ -82,16 +82,17 @@ class SineGenerator:
         self._nblocks = lcm(self.len-1, self.block_len)
         self._nchannels = nchannels
 
-        def callback(a, b, c, d):
-            return self.read(), psc.continue_flag
+        def callback(output, time, status):
+            output[:] = self.read()
+            return psc.continue_flag
 
         default_device = psc.default_output_device()
-        default_device['output channels'] = self.nchannels
-        self._stream = psc.Stream(fs=self.fs,
-                                  block_length=self.block_len,
-                                  output_device=default_device,
-                                  input_device=False,
-                                  callback=callback)
+        self._stream = psc.OutputStream(
+            samplerate=self.fs,
+            blocksize=self.block_len,
+            device=default_device,
+            channels=self.nchannels,
+            callback=callback)
 
     @property
     def a0(self): return self._a0
@@ -172,7 +173,6 @@ class SineGenerator:
         self._stream.stop()
 
 
-
 class LogSweep:
     def __init__(self, a0=0.1, fstart=125, fstop=8000, len_sec=2, pause_sec=0.5,
                  block_len=1024, fs=44100, nchannels=2):
@@ -188,16 +188,17 @@ class LogSweep:
         self._nblocks = lcm(self.len-1, self.block_len)
         self._nchannels = nchannels
 
-        def callback(a, b, c, d):
-            return self.read(), psc.continue_flag
+        def callback(output, time, status):
+            output[:] = self.read()
+            return psc.continue_flag
 
         default_device = psc.default_output_device()
-        default_device['output channels'] = self.nchannels
-        self._stream = psc.Stream(fs=self.fs,
-                                  block_length=self.block_len,
-                                  output_device=default_device,
-                                  input_device=False,
-                                  callback=callback)
+        self._stream = psc.OutputStream(
+            samplerate=self.fs,
+            blocksize=self.block_len,
+            device=default_device,
+            channels=self.nchannels,
+            callback=callback)
 
     @property
     def a0(self): return self._a0
@@ -249,7 +250,7 @@ class LogSweep:
 
     @property
     def signal(self):
-        return np.tile(self._gensignal(), (self.nchannels, 1)).T
+        return np.tile(self._gensignal(), (self.nchaannels, 1)).T
 
     def _nextindex(self):
         self._counter = 1 + self._counter % self._nblocks
